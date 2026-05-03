@@ -1,13 +1,17 @@
 package com.angel.appetito.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.angel.appetito.MenuActivity
 import com.angel.appetito.R
 import com.angel.appetito.model.Restaurante
+import kotlin.jvm.java
+
 
 class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<RestauranteAdapter.ViewHolder>() {
 
@@ -30,6 +34,15 @@ class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<Restau
         p0.nombre.text = restaurante.nombre
         p0.direccion.text = restaurante.direccion
         p0.imagen.setImageResource(restaurante.imagen)
+
+        p0.itemView.setOnClickListener {
+            val context = p0.itemView.context
+
+            val intent = Intent(context, MenuActivity::class.java)
+            intent.putExtra("nombre", restaurante.nombre)
+
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

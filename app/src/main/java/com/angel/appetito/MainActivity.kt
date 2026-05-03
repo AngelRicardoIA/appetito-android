@@ -1,6 +1,7 @@
 package com.angel.appetito
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,9 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.angel.appetito.adapter.RestauranteAdapter
 import com.angel.appetito.model.Restaurante
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.MaterialColors
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        DynamicColors.applyToActivityIfAvailable(this)
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -29,6 +35,9 @@ class MainActivity : AppCompatActivity() {
                 "Sur 16 220, Agrícola Oriental, Iztacalco, CDMX", R.drawable.rest4)
         )
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.materialToolbar)
+        setSupportActionBar(toolbar)
+
         val adapter = RestauranteAdapter(restaurantes)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -38,5 +47,21 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+
+        val item = menu.findItem(R.id.action_search)
+
+        val color = MaterialColors.getColor(
+            this,
+            com.google.android.material.R.attr.colorOnPrimaryContainer,
+            0
+        )
+
+        item.icon?.setTint(color)
+
+        return true
     }
 }
