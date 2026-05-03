@@ -1,5 +1,6 @@
 package com.angel.appetito.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.angel.appetito.R
 import com.angel.appetito.model.Producto
+import com.angel.appetito.ui.DetailActivity
 
 class ProductoAdapter(private val lista: List<Producto>) :
     RecyclerView.Adapter<ProductoAdapter.ViewHolder>() {
@@ -30,6 +32,19 @@ class ProductoAdapter(private val lista: List<Producto>) :
         holder.nombre.text = producto.nombre
         holder.precio.text = producto.precio
         holder.imagen.setImageResource(producto.imagen)
+
+        holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+
+            val intent = Intent(context, DetailActivity::class.java)
+
+            intent.putExtra("nombre", producto.nombre)
+            intent.putExtra("precio", producto.precio)
+            intent.putExtra("imagen", producto.imagen)
+            intent.putExtra("descripcion", producto.descripcion)
+
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

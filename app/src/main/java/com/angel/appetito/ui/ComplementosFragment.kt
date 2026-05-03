@@ -36,31 +36,43 @@ class ComplementosFragment : Fragment() {
         val lista = when(nombreRestaurante) {
 
             "Tortas Ahogadas \"Al estilo Jalisco\"" -> listOf(
-                Producto("Extra salsa picante", "$10", R.drawable.rest1),
-                Producto("Cebolla curtida", "$8", R.drawable.rest1),
-                Producto("Aguacate", "$15", R.drawable.rest1)
+                Producto("Extra salsa", "$10", R.drawable.salsa,
+                    "Porción adicional de salsa picante."),
+                Producto("Cebolla curtida", "$8", R.drawable.cebolla,
+                    "Cebolla preparada con limón y especias."),
+                Producto("Aguacate", "$15", R.drawable.aguacate,
+                    "Porción de aguacate fresco en rebanadas.")
             )
 
             "CherryBlossom - Sushi Place" -> listOf(
-                Producto("Soya extra", "$5", R.drawable.rest2),
-                Producto("Wasabi", "$10", R.drawable.rest2),
-                Producto("Jengibre", "$10", R.drawable.rest2)
+                Producto("Soya extra", "$5", R.drawable.soja,
+                    "Porción adicional de salsa de soya."),
+                Producto("Wasabi", "$10", R.drawable.wasabi,
+                    "Pasta picante tradicional japonesa."),
+                Producto("Jengibre", "$10", R.drawable.jengibre,
+                    "Jengibre encurtido para acompañar sushi.")
             )
 
             "Tacontento" -> listOf(
-                Producto("Salsa extra", "$5", R.drawable.rest3),
-                Producto("Cilantro y cebolla", "$5", R.drawable.rest3),
-                Producto("Limones", "$5", R.drawable.rest3)
+                Producto("Salsa extra", "$5", R.drawable.salsas,
+                    "Porción adicional de salsa."),
+                Producto("Cilantro y cebolla", "$5", R.drawable.cilantro,
+                    "Mezcla fresca de cilantro y cebolla picada."),
+                Producto("Limones", "$5", R.drawable.limones,
+                    "Porción de limones para acompañar.")
             )
 
             "DeliCrepas" -> listOf(
-                Producto("Extra topping", "$15", R.drawable.rest4),
-                Producto("Helado", "$20", R.drawable.rest4),
-                Producto("Lechera", "$10", R.drawable.rest4)
+                Producto("Extra topping", "$15", R.drawable.toppings,
+                    "Ingrediente adicional para crepas dulces o saladas."),
+                Producto("Helado", "$20", R.drawable.helado,
+                    "Bola de helado para acompañar."),
+                Producto("Lechera", "$10", R.drawable.lechera,
+                    "Porción de leche condensada.")
             )
 
             else -> listOf(
-                Producto("Aguacate", "$15", R.drawable.rest1)
+                Producto("Aguacate", "$15", R.drawable.rest1, "default")
             )
         }
 
