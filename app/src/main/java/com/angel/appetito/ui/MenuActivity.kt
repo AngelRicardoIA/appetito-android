@@ -1,4 +1,4 @@
-package com.angel.appetito
+package com.angel.appetito.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.angel.appetito.R
 import com.angel.appetito.adapter.MenuPagerAdapter
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.DynamicColors
@@ -21,6 +22,8 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_menu)
+        val nombre = intent.getStringExtra("nombre")
+        val nombreRestaurante = nombre ?: ""
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -29,7 +32,8 @@ class MenuActivity : AppCompatActivity() {
 
         val viewPager = findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        viewPager.adapter = MenuPagerAdapter(this)
+
+        viewPager.adapter = MenuPagerAdapter(this, nombreRestaurante)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
 
@@ -41,8 +45,6 @@ class MenuActivity : AppCompatActivity() {
             }
 
         }.attach()
-
-        val nombre = intent.getStringExtra("nombre")
 
         val toolbar = findViewById<MaterialToolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)

@@ -1,4 +1,4 @@
-package com.angel.appetito
+package com.angel.appetito.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.angel.appetito.R
 import com.angel.appetito.adapter.RestauranteAdapter
 import com.angel.appetito.model.Restaurante
 import com.google.android.material.appbar.MaterialToolbar

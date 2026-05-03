@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.angel.appetito.MenuActivity
+import com.angel.appetito.ui.MenuActivity
 import com.angel.appetito.R
 import com.angel.appetito.model.Restaurante
 import kotlin.jvm.java
