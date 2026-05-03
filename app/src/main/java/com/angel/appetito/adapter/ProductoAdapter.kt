@@ -14,10 +14,13 @@ import com.angel.appetito.ui.DetailActivity
 class ProductoAdapter(private val lista: List<Producto>) :
     RecyclerView.Adapter<ProductoAdapter.ViewHolder>() {
 
+    private val listaOriginal = lista.toMutableList()
+    private val listaFiltrada = lista.toMutableList()
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nombre: TextView = itemView.findViewById(R.id.nombreProducto)
-        val precio: TextView = itemView.findViewById(R.id.precioProducto)
-        val imagen: ImageView = itemView.findViewById(R.id.imagenProducto)
+        val nombre = itemView.findViewById<TextView>(R.id.nombreProducto)
+        val precio = itemView.findViewById<TextView>(R.id.precioProducto)
+        val imagen = itemView.findViewById<ImageView>(R.id.imagenProducto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +30,7 @@ class ProductoAdapter(private val lista: List<Producto>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val producto = lista[position]
+        val producto = listaFiltrada[position]
 
         holder.nombre.text = producto.nombre
         holder.precio.text = producto.precio
@@ -37,7 +40,6 @@ class ProductoAdapter(private val lista: List<Producto>) :
             val context = holder.itemView.context
 
             val intent = Intent(context, DetailActivity::class.java)
-
             intent.putExtra("nombre", producto.nombre)
             intent.putExtra("precio", producto.precio)
             intent.putExtra("imagen", producto.imagen)
@@ -47,7 +49,23 @@ class ProductoAdapter(private val lista: List<Producto>) :
         }
     }
 
-    override fun getItemCount(): Int {
-        return lista.size
+    override fun getItemCount(): Int = listaFiltrada.size
+
+    fun filtrar(texto: String) {
+        listaFiltrada.clear()
+
+        if (texto.isEmpty()) {
+            listaFiltrada.addAll(listaOriginal)
+        } else {
+            val filtro = texto.lowercase()
+
+            listaOriginal.forEach {
+                if (it.nombre.lowercase().contains(filtro)) {
+                    listaFiltrada.add(it)
+                }
+            }
+        }
+
+        notifyDataSetChanged()
     }
 }

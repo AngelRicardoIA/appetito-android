@@ -65,8 +65,36 @@ class MenuActivity : AppCompatActivity() {
         return true
     }
 
+    private fun filtrarEnFragmentoActual(texto: String) {
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
+        val fragment = supportFragmentManager.findFragmentByTag("f" + viewPager.currentItem)
+
+        when (fragment) {
+            is ComidaFragment -> fragment.filtrar(texto)
+            is BebidasFragment -> fragment.filtrar(texto)
+            is ComplementosFragment -> fragment.filtrar(texto)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
+
+        val item = menu.findItem(R.id.action_search)
+        val searchView = item.actionView as androidx.appcompat.widget.SearchView
+
+        searchView.queryHint = "Buscar producto..."
+
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filtrarEnFragmentoActual(newText ?: "")
+                return true
+            }
+        })
+
         return true
     }
 

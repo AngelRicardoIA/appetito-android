@@ -16,6 +16,8 @@ import kotlin.jvm.java
 class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<RestauranteAdapter.ViewHolder>() {
 
     val lista = lista
+    private val listaOriginal = lista.toMutableList()
+    private val listaFiltrada = lista.toMutableList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nombre = itemView.findViewById<TextView>(R.id.nombre)
@@ -30,7 +32,7 @@ class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<Restau
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        val restaurante = lista[p1]
+        val restaurante = listaFiltrada[p1]
         p0.nombre.text = restaurante.nombre
         p0.direccion.text = restaurante.direccion
         p0.imagen.setImageResource(restaurante.imagen)
@@ -46,6 +48,24 @@ class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<Restau
     }
 
     override fun getItemCount(): Int {
-        return lista.size
+        return listaFiltrada.size
+    }
+
+    fun filtrar(texto: String) {
+        listaFiltrada.clear()
+
+        if (texto.isEmpty()) {
+            listaFiltrada.addAll(listaOriginal)
+        } else {
+            val filtro = texto.lowercase()
+
+            listaOriginal.forEach {
+                if (it.nombre.lowercase().contains(filtro)) {
+                    listaFiltrada.add(it)
+                }
+            }
+        }
+
+        notifyDataSetChanged()
     }
 }

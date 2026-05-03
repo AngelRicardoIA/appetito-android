@@ -51,20 +51,4 @@ class DetailActivity : AppCompatActivity() {
         finish()
         return true
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-
-        val item = menu.findItem(R.id.action_search)
-
-        val color = MaterialColors.getColor(
-            this,
-            com.google.android.material.R.attr.colorOnPrimaryContainer,
-            0
-        )
-
-        item.icon?.setTint(color)
-
-        return true
-    }
 }

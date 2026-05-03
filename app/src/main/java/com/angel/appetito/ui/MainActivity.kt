@@ -16,6 +16,8 @@ import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
 
 class MainActivity : AppCompatActivity() {
+    lateinit var adapter: RestauranteAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         DynamicColors.applyToActivityIfAvailable(this)
 
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<MaterialToolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)
 
-        val adapter = RestauranteAdapter(restaurantes)
+        adapter = RestauranteAdapter(restaurantes)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
@@ -54,6 +56,21 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
 
         val item = menu.findItem(R.id.action_search)
+
+        val searchView = item.actionView as androidx.appcompat.widget.SearchView
+
+        searchView.queryHint = "Buscar restaurante..."
+
+        searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filtrar(newText ?: "")
+                return true
+            }
+        })
 
         val color = MaterialColors.getColor(
             this,

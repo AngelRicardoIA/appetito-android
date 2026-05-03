@@ -13,6 +13,7 @@ import com.angel.appetito.model.Producto
 
 class BebidasFragment : Fragment() {
 
+    lateinit var adapter: ProductoAdapter
     private var nombreRestaurante: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,8 +77,13 @@ class BebidasFragment : Fragment() {
             )
         }
 
-        recyclerView.adapter = ProductoAdapter(lista)
+        adapter = ProductoAdapter(lista)
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    fun filtrar(texto: String) {
+        adapter.filtrar(texto)
     }
 
     companion object {
