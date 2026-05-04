@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.angel.appetito.R
+import com.angel.appetito.database.DatabaseHelper
 import com.angel.appetito.model.Producto
+import com.angel.appetito.ui.AddFoodActivity
 import com.angel.appetito.ui.DetailActivity
 
 class ProductoAdapter(private val lista: List<Producto>) :
@@ -34,7 +38,12 @@ class ProductoAdapter(private val lista: List<Producto>) :
 
         holder.nombre.text = producto.nombre
         holder.precio.text = producto.precio
-        holder.imagen.setImageResource(producto.imagen)
+        if (producto.imagen != 0) {
+            holder.imagen.setImageResource(producto.imagen)
+        } else {
+            holder.imagen.setImageDrawable(null)
+            holder.imagen.setBackgroundResource(R.drawable.placeholder_image)
+        }
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
@@ -47,7 +56,54 @@ class ProductoAdapter(private val lista: List<Producto>) :
 
             context.startActivity(intent)
         }
+
+        holder.itemView.setOnLongClickListener {
+
+            val context = holder.itemView.context
+            val opciones = arrayOf("Editar", "Eliminar")
+
+            androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle("Opciones")
+                .setItems(opciones) { _, which ->
+
+                    when (which) {
+
+                        0 -> {
+                            val intent = Intent(context, AddFoodActivity::class.java)
+                            intent.putExtra("modo", "editar")
+                            intent.putExtra("id", producto.id)
+                            intent.putExtra("nombre", producto.nombre)
+                            intent.putExtra("precio", producto.precio)
+                            intent.putExtra("descripcion", producto.descripcion)
+                            intent.putExtra("imagen", producto.imagen)
+                            intent.putExtra("tipo", "food")
+                            context.startActivity(intent)
+                        }
+
+                        1 -> {
+                            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                                .setTitle("Eliminar alimento")
+                                .setMessage("¿Seguro que quieres eliminar este alimento?")
+                                .setPositiveButton("Eliminar") { _, _ ->
+
+                                    val dbHelper = DatabaseHelper(context)
+                                    dbHelper.deleteFood(producto.id)
+
+                                    Toast.makeText(context, "Eliminado", Toast.LENGTH_SHORT).show()
+
+                                    (context as AppCompatActivity).recreate()
+                                }
+                                .setNegativeButton("Cancelar", null)
+                                .show()
+                        }
+                    }
+                }
+                .show()
+
+            true
+        }
     }
+
 
     override fun getItemCount(): Int = listaFiltrada.size
 

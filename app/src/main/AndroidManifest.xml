@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ApPetito">
         <activity
+            android:name=".ui.AddFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AddRestaurantActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ApPetito" />
+        <activity
             android:name=".ui.DetailActivity"
             android:exported="false" />
         <activity

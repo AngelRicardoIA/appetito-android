@@ -1,5 +1,6 @@
 package com.angel.appetito.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.angel.appetito.R
 import com.angel.appetito.adapter.RestauranteAdapter
+import com.angel.appetito.database.DatabaseHelper
 import com.angel.appetito.model.Restaurante
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     lateinit var adapter: RestauranteAdapter
@@ -21,22 +24,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         DynamicColors.applyToActivityIfAvailable(this)
 
+        val dbHelper = DatabaseHelper(this)
+        val restaurantes = dbHelper.getRestaurants()
+        val db = dbHelper.writableDatabase
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
 
-        val restaurantes = listOf(
-            Restaurante("Tortas Ahogadas \"Al estilo Jalisco\"",
-                "Av Revolucion Nte 123-A, Centro, CDMX", R.drawable.rest1),
-            Restaurante("CherryBlossom - Sushi Place",
-                "Av. Juarez 812, Centro, CDMX", R.drawable.rest2),
-            Restaurante("Tacontento",
-                "Barcelona 17-F, Centro, CDMX", R.drawable.rest3),
-            Restaurante("DeliCrepas",
-                "Sur 16 220, Agrícola Oriental, Iztacalco, CDMX", R.drawable.rest4)
-        )
+        fab.setOnClickListener {
+            val intent = Intent(this, AddRestaurantActivity::class.java)
+            startActivity(intent)
+        }
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 
         val toolbar = findViewById<MaterialToolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)
@@ -81,5 +84,14 @@ class MainActivity : AppCompatActivity() {
         item.icon?.setTint(color)
 
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val dbHelper = DatabaseHelper(this)
+        val nuevosRestaurantes = dbHelper.getRestaurants()
+
+        adapter.actualizarLista(nuevosRestaurantes)
     }
 }

@@ -10,7 +10,7 @@
             android:id="@+id/imagen"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/bg_image"
+            android:background="@drawable/placeholder_image"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
             android:layout_marginEnd="10dp" />

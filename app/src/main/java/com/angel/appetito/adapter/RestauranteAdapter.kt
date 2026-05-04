@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.angel.appetito.ui.MenuActivity
 import com.angel.appetito.R
+import com.angel.appetito.database.DatabaseHelper
 import com.angel.appetito.model.Restaurante
+import com.angel.appetito.ui.AddRestaurantActivity
 import kotlin.jvm.java
 
 
 class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<RestauranteAdapter.ViewHolder>() {
 
-    val lista = lista
-    private val listaOriginal = lista.toMutableList()
-    private val listaFiltrada = lista.toMutableList()
+    private var lista = lista.toMutableList()
+    private var listaOriginal = lista.toMutableList()
+    private var listaFiltrada = lista.toMutableList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nombre = itemView.findViewById<TextView>(R.id.nombre)
@@ -37,13 +41,59 @@ class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<Restau
         p0.direccion.text = restaurante.direccion
         p0.imagen.setImageResource(restaurante.imagen)
 
+
         p0.itemView.setOnClickListener {
             val context = p0.itemView.context
 
             val intent = Intent(context, MenuActivity::class.java)
-            intent.putExtra("nombre", restaurante.nombre)
+            intent.putExtra("id", restaurante.id)
 
             context.startActivity(intent)
+        }
+        p0.itemView.setOnLongClickListener {
+
+            val context = p0.itemView.context
+
+            val opciones = arrayOf("Editar", "Eliminar")
+
+            androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle("Opciones")
+                .setItems(opciones) { _, which ->
+
+                    when (which) {
+
+                        0 -> {
+                            val intent = Intent(context, AddRestaurantActivity::class.java)
+                            intent.putExtra("modo", "editar")
+                            intent.putExtra("id", restaurante.id)
+                            intent.putExtra("nombre", restaurante.nombre)
+                            intent.putExtra("direccion", restaurante.direccion)
+                            intent.putExtra("imagen", restaurante.imagen)
+
+                            context.startActivity(intent)
+                        }
+
+                        1 -> {
+                            com.google.android.material.dialog.MaterialAlertDialogBuilder(context)
+                                .setTitle("Eliminar restaurante")
+                                .setMessage("¿Seguro que quieres eliminar este restaurante?")
+                                .setPositiveButton("Eliminar") { _, _ ->
+
+                                    val dbHelper = DatabaseHelper(context)
+                                    dbHelper.deleteRestaurant(restaurante.id)
+
+                                    Toast.makeText(context, "Eliminado", Toast.LENGTH_SHORT).show()
+
+                                    (context as AppCompatActivity).recreate()
+                                }
+                                .setNegativeButton("Cancelar", null)
+                                .show()
+                        }
+                    }
+                }
+                .show()
+
+            true
         }
     }
 
@@ -65,6 +115,19 @@ class RestauranteAdapter(lista: List<Restaurante>) : RecyclerView.Adapter<Restau
                 }
             }
         }
+
+        notifyDataSetChanged()
+    }
+
+    fun actualizarLista(nuevaLista: List<Restaurante>) {
+        lista.clear()
+        lista.addAll(nuevaLista)
+
+        listaOriginal.clear()
+        listaOriginal.addAll(nuevaLista)
+
+        listaFiltrada.clear()
+        listaFiltrada.addAll(nuevaLista)
 
         notifyDataSetChanged()
     }

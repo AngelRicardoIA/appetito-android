@@ -1,5 +1,6 @@
 package com.angel.appetito.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -9,9 +10,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.angel.appetito.R
 import com.angel.appetito.adapter.MenuPagerAdapter
+import com.angel.appetito.database.DatabaseHelper
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -22,8 +25,7 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_menu)
-        val nombre = intent.getStringExtra("nombre")
-        val nombreRestaurante = nombre ?: ""
+        val id = intent.getIntExtra("id", -1)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -33,7 +35,7 @@ class MenuActivity : AppCompatActivity() {
         val viewPager = findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
 
-        viewPager.adapter = MenuPagerAdapter(this, nombreRestaurante)
+        viewPager.adapter = MenuPagerAdapter(this, id)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
 
@@ -49,7 +51,7 @@ class MenuActivity : AppCompatActivity() {
         val toolbar = findViewById<MaterialToolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)
 
-        supportActionBar?.title = nombre
+        supportActionBar?.title = "Menú"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val color = MaterialColors.getColor(
@@ -58,6 +60,14 @@ class MenuActivity : AppCompatActivity() {
         )
 
         toolbar.navigationIcon?.setTint(color)
+
+        val fab = findViewById<FloatingActionButton>(R.id.fabFood)
+
+        fab.setOnClickListener {
+            val intent = Intent(this, AddFoodActivity::class.java)
+            intent.putExtra("restaurantId", id)
+            startActivity(intent)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -96,6 +106,13 @@ class MenuActivity : AppCompatActivity() {
         })
 
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
+        viewPager.adapter = MenuPagerAdapter(this, intent.getIntExtra("id", -1))
     }
 
 }
